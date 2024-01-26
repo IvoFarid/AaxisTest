@@ -5,7 +5,7 @@ STEPS:
 1) Clone this repo into a folder.
 2) Move to the cloned folder.
 3) run 'composer install' in your terminal to install all dependencies needed.
-4) configure ENV. Add this values and configure it to your needs.
+4) create the .env and add this values and configure it to your needs.
    * APP_ENV=dev
    * APP_SECRET=anysecret
    * DATABASE_URL="postgresql://YOUR_POSTGRE_USER:YOUR_POSTGRE_PASSWORD@127.0.0.1:5432/DATABASENAME?serverVersion=16&charset=utf8"
