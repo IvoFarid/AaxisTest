@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Products
+{% endblock %}
+
+{% block body %}
+	<div class="d-flex justify-content-center pt-5">
+		<h2 class="fw-medium text-white">Symfony Test</h2>
+	</div>
+	<div class="d-flex flex-column p-4 justify-content-center align-items-center">
+
+		<form method="POST" action="{{path('app_products_edit')}}">
+			<h4 class="fw-medium text-white">Edit Products</h4>
+			<div id="inputdivs" class="bg-dark p-4 rounded-top d-flex flex-column gap-1">
+				<div id="inputdiv-1" class="d-flex gap-2">
+					<div class="d-flex flex-column">
+						<label for="selectsku" class="text-white">Select a product to update</label>
+						<select id="selectsku" class="rounded p-1" name="oldskus[product-1]" required>
+							<option value="" selected>List of products here</option>
+							{% for sku in skus %}
+								<option value="{{sku}}">{{sku}}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div class="d-flex flex-column">
+						<label for="newsku" class="text-white">New Sku &#40;not required&#41;</label>
+						<input type="text" placeholder="new sku" id="newsku" name="updatedProducts[product-1][]">
+					</div>
+					<div class="d-flex flex-column">
+						<label for="newDescription" class="text-white">New Description</label>
+						<input type="text" placeholder="new description" id="newDescription" name="updatedProducts[product-1][]">
+					</div>
+					<div class="d-flex flex-column">
+						<label for="newName" class="text-white">New Name</label>
+						<input type="text" placeholder="new name" id="newname" name="updatedProducts[product-1][]">
+					</div>
+				</div>
+			</div>
+			<div class="d-flex gap-1 justify-content-center flex-column align-items-center">
+				<button id="addButton" type="button" data-turbo="false" class="bg-dark text-white p-1 rounded-bottom border border-secondary w-100">Edit another product</button>
+				<button type="submit" data-turbo="false" class="bg-dark text-white p-1 mt-3 rounded w-100">Submit</button>
+				<a href="{{ path('app_product_index') }}" class="text-white mt-3">View products list</a>
+			</div>
+		</form>
+		<script>
+			// it needs to at least have one input with effective value. so i catch every input and before submit i evaluate if at least one has a value.
+
+// i needed to use JQuery because if i paste html with StimulusJs it doesn't parse the twig directives because it isn't able to do that.
+// so, in the creation form, i was able to make that form work with stimulus, but here, i need to have the twig directives working so i can map
+// the values on the select. It's better than making an AJAX request everytime that the user adds a select.
+const addButton = document.getElementById('addButton');
+addButton.addEventListener('click', () => {
+add();
+})
+function add() {
+let lastDivId = document.getElementById('inputdivs').lastElementChild.getAttribute('id');
+// im getting the last div inside my inputdivs, so i can access the id attribute and then add a new one with the values updated
+// so i am able to manage the info correctly in the controller.
+let lastId = lastDivId.substr(-1);
+lastId++;
+console.log(lastId, 'nuevo id');
+$('#inputdivs').append(`<div id="inputdiv-${lastId}" class="d-flex gap-2"><div class="d-flex flex-column"><label for="selectsku" class="text-white">Select a product to update</label><select id="selectsku" class="rounded p-1" required name="oldskus[product-${lastId}]"><option value="" selected>List of products here</option> {% for sku in skus %} <option value="{{sku}}">{{sku}}</option> {% endfor %} </select></div><div class="d-flex flex-column"><label for="newsku" class="text-white">New Sku &#40;not required&#41;</label><input type="text" placeholder="new sku" id="newsku" name="updatedProducts[product-${lastId}][]"></div><div class="d-flex flex-column"><label for="newDescription" class="text-white">New Description</label> <input type="text" placeholder="new description" id="newDescription" name="updatedProducts[product-${lastId}][]"></div><div class="d-flex flex-column"><label for="newName" class="text-white">New Name</label> <input type="text" placeholder="new name" id="newname" name="updatedProducts[product-${lastId}][]"></div></div>`)
+}
+
+		</script>
+	{% endblock %}
